@@ -1,4 +1,4 @@
-name: Release Windows.
+name: Windows Release.
 
 on:
   push:
@@ -324,6 +324,7 @@ jobs:
           call configure.bat ^
           -D TDESKTOP_API_TEST=ON ^
           -D DESKTOP_APP_USE_PACKAGED=OFF ^
+          -D DESKTOP_APP_ENABLE_IPO_OPTIMIZATIONS=OFF ^
           %TDESKTOP_BUILD_DEFINE% ^
           -DCMAKE_SYSTEM_VERSION=%SDK%
 
@@ -338,7 +339,6 @@ jobs:
           cd %REPO_NAME%\out\Release
           mkdir artifact
           move Telegram.exe artifact/
-          move Updater.exe artifact/
       - uses: actions/upload-artifact@master
         name: Upload artifact.
         if: env.UPLOAD_ARTIFACT == 'true'
