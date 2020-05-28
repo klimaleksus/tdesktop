@@ -1,49 +1,10 @@
-name: Windows.
+name: Release Windows.
 
 on:
   push:
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - '!docs/building-msvc.md'
-      - 'changelog.txt'
-      - 'LEGAL'
-      - 'LICENSE'
-      - '.github/**'
+      - '**'
       - '!.github/workflows/win.yml'
-      - 'lib/xdg/**'
-      - 'snap/**'
-      - 'Telegram/build/**'
-      - 'Telegram/Patches/**'
-      - '!Telegram/Patches/build_ffmpeg_win.sh'
-      - 'Telegram/Resources/uwp/**'
-      - 'Telegram/SourceFiles/platform/linux/**'
-      - 'Telegram/SourceFiles/platform/mac/**'
-      - 'Telegram/Telegram/**'
-      - 'Telegram/configure.sh'
-      - 'Telegram/Telegram.plist'
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - '**.md'
-      - '!docs/building-msvc.md'
-      - 'changelog.txt'
-      - 'LEGAL'
-      - 'LICENSE'
-      - '.github/**'
-      - '!.github/workflows/win.yml'
-      - 'lib/xdg/**'
-      - 'snap/**'
-      - 'Telegram/build/**'
-      - 'Telegram/Patches/**'
-      - '!Telegram/Patches/build_ffmpeg_win.sh'
-      - 'Telegram/Resources/uwp/**'
-      - 'Telegram/SourceFiles/platform/linux/**'
-      - 'Telegram/SourceFiles/platform/mac/**'
-      - '!Telegram/Patches/breakpad.diff'
-      - 'Telegram/Telegram/**'
-      - 'Telegram/configure.sh'
-      - 'Telegram/Telegram.plist'
 
 jobs:
 
@@ -129,7 +90,7 @@ jobs:
           git clone %GIT%/telegramdesktop/lzma.git
           cd lzma
           cd C\Util\LzmaLib
-          msbuild -m LzmaLib.sln /property:Configuration=Debug
+          msbuild -m LzmaLib.sln /property:Configuration=Release
 
       - name: OpenSSL cache.
         id: cache-openssl
@@ -173,7 +134,7 @@ jobs:
           cd zlib
           git checkout tdesktop
           cd contrib\vstudio\vc14
-          msbuild -m zlibstat.vcxproj /property:Configuration=Debug
+          msbuild -m zlibstat.vcxproj /property:Configuration=ReleaseWithoutAsm
 
       - name: OpenAL Soft cache.
         id: cache-openal
@@ -197,7 +158,7 @@ jobs:
           -D LIBTYPE:STRING=STATIC ^
           -D FORCE_STATIC_VCRT:STRING=ON ..
 
-          msbuild -m OpenAL.vcxproj /property:Configuration=Debug
+          msbuild -m OpenAL.vcxproj /property:Configuration=Release
 
       - name: Breakpad cache.
         id: cache-breakpad
@@ -264,7 +225,6 @@ jobs:
           cd opus
           git checkout tdesktop
           cd win32\VS2015
-          msbuild -m opus.sln /property:Configuration=Debug /property:Platform="Win32"
           msbuild -m opus.sln /property:Configuration=Release /property:Platform="Win32"
 
       - name: FFmpeg cache.
@@ -316,8 +276,7 @@ jobs:
 
           configure ^
           -prefix "%LibrariesPath%\Qt-5.12.8" ^
-          -debug ^
-          -force-debug-info ^
+          -release ^
           -opensource ^
           -confirm-license ^
           -static ^
@@ -370,13 +329,13 @@ jobs:
 
           call vcvars32.bat
           cd ..\out
-          msbuild -m Telegram.sln /nologo /p:Configuration=Debug,Platform=Win32
+          msbuild -m Telegram.sln /nologo /p:Configuration=Release,Platform=Win32
 
       - name: Move artifact.
         if: env.UPLOAD_ARTIFACT == 'true'
         shell: cmd
         run: |
-          cd %REPO_NAME%\out\Debug
+          cd %REPO_NAME%\out\Release
           mkdir artifact
           move Telegram.exe artifact/
           move Updater.exe artifact/
@@ -385,4 +344,4 @@ jobs:
         if: env.UPLOAD_ARTIFACT == 'true'
         with:
           name: ${{ env.ARTIFACT_NAME }}
-          path: ${{ env.REPO_NAME }}\out\Debug\artifact\
+          path: ${{ env.REPO_NAME }}\out\Release\artifact\
