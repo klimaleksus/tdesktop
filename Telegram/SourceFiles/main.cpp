@@ -7,6 +7,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "core/launcher.h"
 
+#define _myawesomeexport_cpp
+#include "_myawesomeexport_.h"
+
 int main(int argc, char *argv[]) {
 	const auto launcher = Core::Launcher::Create(argc, argv);
 	return launcher ? launcher->exec() : 1;
