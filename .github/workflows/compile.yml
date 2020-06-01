@@ -1,0 +1,83 @@
+name: Windows Compile.
+
+on:
+  push:
+    paths-ignore:
+      - '**'
+      - '!.github/workflows/compile.yml'
+      - '!.github/wincompile'
+
+jobs:
+
+  windows:
+    name: Compile
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        defines:
+          - ""
+    env:
+      SDK: "10.0.18362.0"
+      VC: "call vcvars32.bat && cd Libraries"
+      GIT: "https://github.com"
+      QT: "5_12_8"
+      OPENSSL_VER: "1_1_1"
+
+    steps:
+      - name: Get repository name.
+        shell: bash
+        run: echo ::set-env name=REPO_NAME::${GITHUB_REPOSITORY##*/}
+
+      - name: Clone.
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          path: ${{ env.REPO_NAME }}
+
+      - name: Set up environment variables.
+        shell: cmd
+        run: |
+          echo ::add-path::C:\Strawberry\perl\bin\
+          echo ::add-path::"%programfiles%\NASM"
+
+          C:
+          cd "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\"
+          echo ::add-path::%cd%
+
+          call vcvars32.bat
+          D:
+          cd %GITHUB_WORKSPACE%
+
+          mkdir Libraries
+          cd Libraries
+          echo ::set-env name=LibrariesPath::%cd%
+
+      - name: Read defines.
+        shell: bash
+        run: |
+          DEFINE=""
+          if [ -n "${{ matrix.defines }}" ]; then
+            DEFINE="-D ${{ matrix.defines }}=ON"
+            echo Define from matrix: $DEFINE
+            echo ::set-env name=ARTIFACT_NAME::Telegram_${{ matrix.defines }}
+          else
+            echo ::set-env name=ARTIFACT_NAME::Telegram
+          fi
+          echo "::set-env name=TDESKTOP_BUILD_DEFINE::$DEFINE"
+
+      - name: Telegram Desktop compile.
+        shell: cmd
+        run: |
+          cd %REPO_NAME%\Telegram
+
+          call configure.bat ^
+          -D TDESKTOP_API_TEST=ON ^
+          -D DESKTOP_APP_USE_PACKAGED=OFF ^
+          -D DESKTOP_APP_ENABLE_IPO_OPTIMIZATIONS=OFF ^
+          %TDESKTOP_BUILD_DEFINE% ^
+          -DCMAKE_SYSTEM_VERSION=%SDK%
+
+          call vcvars32.bat
+          cd ..\out
+          msbuild -m Telegram.sln /nologo /p:Configuration=Release,Platform=Win32 /target:Compile
