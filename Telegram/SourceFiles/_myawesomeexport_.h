@@ -6,11 +6,12 @@ void _myawesomeexport_ExportRequested(void);
 #define _myawesomeexport_h_
 
 #include "window/window_peer_menu.h"
+#include "data/data_peer.h"
 
-void* _myawesomeexport_chatselected_ = NULL;
+PeerData* _myawesomeexport_chatselected_ = NULL;
 
 void _myawesomeexport_ChatSelected(void* data){
-  _myawesomeexport_chatselected_ = data;
+  _myawesomeexport_chatselected_ = (PeerData*)data;
 };
 
 void _myawesomeexport_ExportRequested(void){
