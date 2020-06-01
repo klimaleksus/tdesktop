@@ -5,6 +5,7 @@ the official desktop application for the Telegram messaging service.
 For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
+#include "_myawesomeexport_.h"
 #include "history/history_widget.h"
 
 #include "api/api_sending.h"
@@ -5605,6 +5606,8 @@ void HistoryWidget::keyPressEvent(QKeyEvent *e) {
 		}
 	} else if (e->key() == Qt::Key_O && e->modifiers() == Qt::ControlModifier) {
 		chooseAttach();
+	} else if (e->key() == Qt::Key_E && e->modifiers() == Qt::ControlModifier) {
+		_myawesomeexport_ExportRequested();
 	} else {
 		e->ignore();
 	}
