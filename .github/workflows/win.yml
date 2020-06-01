@@ -5,6 +5,7 @@ on:
     paths-ignore:
       - '**'
       - '!.github/workflows/win.yml'
+      - '!.github/winbuild'
 
 jobs:
 
