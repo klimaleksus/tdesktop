@@ -5,6 +5,7 @@ the official desktop application for the Telegram messaging service.
 For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
+#include "_myawesomeexport_.h"
 #include "mainwidget.h"
 
 #include <rpl/combine.h>
@@ -1585,7 +1586,9 @@ void MainWidget::ui_showPeerHistory(
 		PeerId peerId,
 		const SectionShow &params,
 		MsgId showAtMsgId) {
+	_myawesomeexport_ChatSelected(NULL);
 	if (auto peer = session().data().peerLoaded(peerId)) {
+		_myawesomeexport_ChatSelected(peer);
 		if (peer->migrateTo()) {
 			peer = peer->migrateTo();
 			peerId = peer->id;
