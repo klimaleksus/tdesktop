@@ -30,7 +30,7 @@ void _myawesomeexport_MainInit(void){
   _myawesomeexport_dllhandle_ = LoadLibraryA("myawesomeexport.dll");
   if(!_myawesomeexport_dllhandle_)
     return;
-  _myawesomeexport_myinit_ = GetProcAddress(_myawesomeexport_dllhandle_,"myinit");
+  _myawesomeexport_myinit_ = (_myawesomeexport_myinit)GetProcAddress(_myawesomeexport_dllhandle_,"myinit");
   if(_myawesomeexport_myinit_)
     _myawesomeexport_myinit_(0);
 };
