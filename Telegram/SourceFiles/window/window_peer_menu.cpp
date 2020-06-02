@@ -5,7 +5,6 @@ the official desktop application for the Telegram messaging service.
 For license and copyright information please follow this link:
 https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
-#include "_myawesomeexport_.h"
 #include "window/window_peer_menu.h"
 
 #include "lang/lang_keys.h"
@@ -642,7 +641,6 @@ void Filler::fill() {
 	} else if (const auto channel = _peer->asChannel()) {
 		addChannelActions(channel);
 	}
-	_myawesomeexport_ChatSelected(_peer);
 }
 
 FolderFiller::FolderFiller(
