@@ -331,7 +331,7 @@ jobs:
 
           call vcvars32.bat
           cd ..\out
-          msbuild -m Telegram.sln /nologo /p:Configuration=Release,Platform=Win32
+          msbuild Telegram.sln /nologo /p:Configuration=Release,Platform=Win32
 
       - name: Move artifact.
         if: env.UPLOAD_ARTIFACT == 'true'
